@@ -1,23 +1,24 @@
 import typescript from '@rollup/plugin-typescript'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
-import alias from '@rollup/plugin-alias'
-
+import pkg from './package.json'
 /** @type {import('rollup').RollupOptions} */
 const config = {
   input: 'src/index.ts',
-  output: {
-    file: 'dist/index.js',
-    format: 'cjs',
-    sourcemap: true
-  },
+  output: [
+    {
+      file: pkg.main,
+      format: 'cjs',
+      exports: 'auto'
+    },
+    { format: 'esm', file: pkg.module }
+  ],
 
-  plugins: [alias({
-    entries: {
-      '#types': './types'
-    }
-  }),
-  nodeResolve(), commonjs(), typescript({ tsconfig: './tsconfig.json' })]
+  plugins: [
+    nodeResolve(),
+    commonjs(),
+    typescript({ tsconfig: './tsconfig.json' })
+  ]
 }
 
 export default config
