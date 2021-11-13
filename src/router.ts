@@ -2,6 +2,7 @@ import type { Middleware } from 'koa-compose'
 import compose from 'koa-compose'
 import type { IExtendableContext } from './context'
 import { pathToRegexp } from 'path-to-regexp'
+
 export interface ILayer {
   path?: string
   middleware: Middleware<IExtendableContext>
@@ -15,17 +16,26 @@ export interface IRouterOptions {
 export class Router {
   stack: ILayer[]
   options: IRouterOptions
-  constructor (options: IRouterOptions) {
+  constructor (options?: IRouterOptions) {
     this.stack = []
     this.options = options || {}
   }
 
-  use (path: string, fn?: Middleware<IExtendableContext>) {
+  get prefix () {
+    return this.options.prefix || ''
+  }
+
+  use (
+    path: string | Middleware<IExtendableContext>,
+    fn?: Middleware<IExtendableContext>
+  ) {
     if (typeof path === 'string') {
       if (typeof fn === 'function') {
         this.stack.push({
           path,
-          regexp: pathToRegexp(path),
+          regexp: pathToRegexp([this.prefix, path].join('/'), [], {
+            end: false
+          }),
           middleware: fn,
           match (url) {
             return this.regexp!.test(url)
@@ -47,17 +57,24 @@ export class Router {
 
   routes () {
     const router: Router = this
+
+    const prefixReg = pathToRegexp(this.prefix, [], {
+      end: false
+    })
     const dispatch: Middleware<IExtendableContext> & { router: Router } =
       function (ctx, next) {
-        const matchedLayers = router.match(ctx.url)
-        const layerChain = matchedLayers.reduce<
-          Middleware<IExtendableContext>[]
-        >((acc, cur) => {
-          acc.push(cur.middleware)
-          return acc
-        }, [])
+        if (prefixReg.test(ctx.url)) {
+          const matchedLayers = router.match(ctx.url)
+          const layerChain = matchedLayers.reduce<
+            Middleware<IExtendableContext>[]
+          >((acc, cur) => {
+            acc.push(cur.middleware)
+            return acc
+          }, [])
 
-        return compose(layerChain)(ctx, next)
+          return compose(layerChain)(ctx, next)
+        }
+        next()
       }
     dispatch.router = router
     return dispatch

@@ -1,4 +1,4 @@
-import App from '../src/application'
+import { Application as App } from '../src/application'
 import { pathToRegexp } from 'path-to-regexp'
 import type { IExtendableContext } from '../src/context'
 jest.setTimeout(60000)

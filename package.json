@@ -1,6 +1,6 @@
 {
   "name": "simple-cloudbase-router",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "index.js",
   "repository": "git@github.com:sonofmagic/simple-cloudbase-router.git",
   "author": "SonOfMagic <qq1324318532@gmail.com>",

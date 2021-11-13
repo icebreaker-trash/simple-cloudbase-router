@@ -27,7 +27,7 @@ export interface IConfig {
   debug?: boolean
 }
 
-class Application extends Emitter {
+export class Application extends Emitter {
   public context: IBaseContext
   public middleware: Middleware<IExtendableContext>[]
   public config: IConfig
@@ -99,5 +99,3 @@ class Application extends Emitter {
     console.error(`\n${msg.replace(/^/gm, '  ')}\n`)
   }
 }
-
-export default Application
