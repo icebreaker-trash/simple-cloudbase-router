@@ -2,7 +2,8 @@
   "compilerOptions": {
     "outDir": "dist",
     "declaration": true,
-    "declarationDir": ".",
+    "declarationDir": "types",
+    "declarationMap": false,
     "rootDir": "src",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
@@ -18,10 +19,7 @@
     "strict": true,
     "target": "es2017",
     "baseUrl": ".",
-    "paths": {
-      "#types/*": ["types/*"],
-      "#types": ["types/index.d.ts"]
-    }
+    "paths": {}
   },
   "exclude": ["dist", "node_modules", "test/types"]
 }

@@ -1,14 +1,20 @@
 import Emitter from 'events'
 import compose from 'koa-compose'
-import type { Middleware, ComposedMiddleware } from 'koa-compose'
+
 import context from './context'
-import type {
-  IBaseContext,
-  IExtendableContext,
-  ICloudbaseEvent,
-  ICloudbaseContext
-} from '#types'
+
 import type { ScfError } from './error'
+import type { IBaseContext, IExtendableContext } from './context'
+import type { Middleware, ComposedMiddleware } from 'koa-compose'
+export interface ICloudbaseEvent {
+  url: string
+  data?: {
+    [key: string]: any
+  }
+  [key: string]: any
+}
+
+export interface ICloudbaseContext {}
 
 class Application extends Emitter {
   public context: IBaseContext

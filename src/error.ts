@@ -5,7 +5,10 @@
 
 // https://github.com/Raynos/error/blob/master/index.js
 
-import type { IScfErrorInfo } from '#types'
+export type IScfErrorInfo = {
+  code?: string | number
+  [key: string]: any
+} // Record<string, any>
 
 const nargs = /\{([0-9a-zA-Z_]+)\}/g
 
