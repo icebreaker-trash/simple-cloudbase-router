@@ -59,8 +59,7 @@ describe('[application]', () => {
     })
     let outCtx: IExtendableContext = app.createContext(event, context)
     outCtx.body = { isError: false }
-    app.on('error', (err, ctx) => {
-      console.log(err)
+    app.on('error', (_err, ctx) => {
       outCtx = ctx
       ctx.body.isError = true
     })

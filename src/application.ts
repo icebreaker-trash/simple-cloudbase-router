@@ -23,17 +23,23 @@ export interface IResponseData {
   }
 }
 
+export interface IConfig {
+  debug?: boolean
+}
+
 class Application extends Emitter {
   public context: IBaseContext
   public middleware: Middleware<IExtendableContext>[]
-  constructor () {
+  public config: IConfig
+  constructor (config?: IConfig) {
     super()
     this.middleware = []
     this.context = Object.create(context)
+    this.config = config ?? {}
   }
 
-  use (fns: Middleware<IExtendableContext>) {
-    this.middleware.push(fns)
+  use (fn: Middleware<IExtendableContext>) {
+    this.middleware.push(fn)
     return this
   }
 
@@ -65,6 +71,10 @@ class Application extends Emitter {
 
   handleError (err: ScfError) {
     const json = err.toJSON()
+    if (!this.config.debug) {
+      delete json.stack
+    }
+
     return {
       status: json?.status ?? 500,
       data: json
