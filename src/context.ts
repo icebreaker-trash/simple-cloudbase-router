@@ -8,7 +8,9 @@ export interface IBaseContext {
 export interface IExtendableContext extends IBaseContext {
   event: ICloudbaseEvent
   context: ICloudbaseContext
-  body?: Record<string, any>
+  body: Record<string, any>
+  url: string
+  status: number
 }
 
 export const DEAULT_FAILED_CODE = 'FAIL_TO_INVOKE_FUNCTION'
@@ -17,7 +19,8 @@ const proto: IBaseContext = {
   throw (message: string, info?: IScfErrorInfo) {
     throw new ScfError(message, {
       ...info,
-      code: info?.code || DEAULT_FAILED_CODE
+      code: info?.code || DEAULT_FAILED_CODE,
+      status: info?.status || 500
     })
   }
 }

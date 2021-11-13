@@ -25,6 +25,7 @@
     "jest": "^27.3.1",
     "koa-compose": "^4.1.0",
     "lodash": "^4.17.21",
+    "path-to-regexp": "^6.2.0",
     "rollup": "^2.60.0",
     "ts-jest": "^27.0.7",
     "ts-node": "^10.4.0",

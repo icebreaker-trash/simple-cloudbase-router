@@ -1,12 +1,8 @@
-// code -> info
-// message
-// name
-// stack
-
 // https://github.com/Raynos/error/blob/master/index.js
 
 export type IScfErrorInfo = {
   code?: string | number
+  status?: number
   [key: string]: any
 } // Record<string, any>
 
