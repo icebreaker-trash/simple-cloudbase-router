@@ -7,7 +7,7 @@ import type { ScfError } from './error'
 import type { IBaseContext, IExtendableContext } from './context'
 import type { Middleware, ComposedMiddleware } from 'koa-compose'
 export interface ICloudbaseEvent {
-  $url: string
+  $url?: string
   data?: {
     [key: string]: any
   }
@@ -99,3 +99,5 @@ export class Application extends Emitter {
     console.error(`\n${msg.replace(/^/gm, '  ')}\n`)
   }
 }
+
+export const App = Application

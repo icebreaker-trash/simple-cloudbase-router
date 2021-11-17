@@ -1,9 +1,14 @@
-import { Router, Application } from '../src'
 
+import {
+  createApp,
+  createCloudContext,
+  createCloudEvent,
+  createRouter
+} from './util'
 describe('[Router]', () => {
   test('default use router with prefix', async () => {
-    const app = new Application()
-    const router = new Router({
+    const app = createApp()
+    const router = createRouter({
       prefix: 'common'
     })
     router.use((ctx, next) => {
@@ -15,13 +20,11 @@ describe('[Router]', () => {
       ctx.body.getOpenId = true
       next()
     })
-    const event = {
-      $url: 'common/getOpenId',
-      data: {
-        a: 1
-      }
-    }
-    const context = {}
+
+    const event = createCloudEvent('common/getOpenId', {
+      a: 1
+    })
+    const context = createCloudContext()
     app.use(router.routes())
 
     const res = await app.serve(event, context)

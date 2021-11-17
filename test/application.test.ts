@@ -1,18 +1,16 @@
-import { Application as App } from '../src/application'
 import { pathToRegexp } from 'path-to-regexp'
 import type { IExtendableContext } from '../src/context'
+import { createApp, createCloudEvent, createCloudContext } from './util'
+
 jest.setTimeout(60000)
 describe('[application]', () => {
   test('console context ', async () => {
     const regexp = pathToRegexp('common/getOpenId')
-    const app = new App()
-    const event = {
-      $url: 'common/getOpenId',
-      data: {
-        a: 1
-      }
-    }
-    const context = {}
+    const app = createApp()
+    const event = createCloudEvent('common/getOpenId', {
+      a: 1
+    })
+    const context = createCloudContext()
 
     const ctx = app.createContext(event, context)
 
@@ -42,14 +40,11 @@ describe('[application]', () => {
 
   test('throw error', async () => {
     const regexp = pathToRegexp('common/error')
-    const app = new App()
-    const event = {
-      $url: 'common/error',
-      data: {
-        a: 1
-      }
-    }
-    const context = {}
+    const app = createApp()
+    const event = createCloudEvent('common/error', {
+      a: 1
+    })
+    const context = createCloudContext()
 
     app.use((ctx, next) => {
       if (regexp.test(ctx.url)) {
