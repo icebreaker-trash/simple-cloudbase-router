@@ -1,4 +1,3 @@
-
 import {
   createApp,
   createCloudContext,
@@ -8,6 +7,12 @@ import {
 describe('[Router]', () => {
   test('default use router with prefix', async () => {
     const app = createApp()
+    app.use((ctx, next) => {
+      ctx.wxContext = {
+        openid: '123'
+      }
+      next()
+    })
     const router = createRouter({
       prefix: 'common'
     })
@@ -19,6 +24,8 @@ describe('[Router]', () => {
     router.use('getOpenId', (ctx, next) => {
       ctx.body.getOpenId = true
       next()
+      // @ts-ignore
+      ctx.body.openid = ctx.wxContext.openid
     })
 
     const event = createCloudEvent('common/getOpenId', {
@@ -31,5 +38,6 @@ describe('[Router]', () => {
     expect(res.data.aa).toBe(true)
     expect(res.data.bb).toBe(true)
     expect(res.data.getOpenId).toBe(true)
+    expect(res.data.openid).toBe('123')
   })
 })
