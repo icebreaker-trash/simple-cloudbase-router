@@ -31,6 +31,12 @@ describe('[Router]', () => {
       ctx.body.openid = ctx.wxContext.openid
     })
 
+    router.use('nothing2Do', (ctx, next) => {
+      ctx.body.nothing2Do = true
+      next()
+      ctx.body.nothing2Do2 = true
+    })
+
     const event = createCloudEvent('common/getOpenId', {
       a: 1
     })
@@ -42,5 +48,7 @@ describe('[Router]', () => {
     expect(res.data.bb).toBe(true)
     expect(res.data.getOpenId).toBe(true)
     expect(res.data.openid).toBe('123')
+    expect(res.data.nothing2Do).toBeUndefined()
+    expect(res.data.nothing2Do2).toBeUndefined()
   })
 })
