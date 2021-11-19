@@ -28,6 +28,7 @@ describe('[application]', () => {
 
     app.use((ctx, next) => {
       ctx.body.messgae = 'hello'
+      ctx.body.a = ctx.data.a
       next()
     })
 
@@ -36,6 +37,7 @@ describe('[application]', () => {
     expect(ret.status).toBe(200)
     expect(ret.data.code).toBe('getOpenId')
     expect(ret.data.messgae).toBe('hello')
+    expect(ret.data.a).toBe(1)
   })
 
   test('throw error', async () => {

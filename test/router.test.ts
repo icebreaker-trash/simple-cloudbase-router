@@ -6,14 +6,17 @@ import {
 } from './util'
 describe('[Router]', () => {
   test('default use router with prefix', async () => {
-    const app = createApp()
+    type IExtendCtx = {
+      wxContext: Record<string, any>
+    }
+    const app = createApp<IExtendCtx>()
     app.use((ctx, next) => {
       ctx.wxContext = {
         openid: '123'
       }
       next()
     })
-    const router = createRouter({
+    const router = createRouter<IExtendCtx>({
       prefix: 'common'
     })
     router.use((ctx, next) => {

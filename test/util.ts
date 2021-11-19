@@ -1,12 +1,12 @@
 import { Router, App } from '../src'
 import type { ICloudbaseContext, ICloudbaseEvent, IRouterOptions } from '../src'
 
-export function createApp () {
-  return new App()
+export function createApp<T> () {
+  return new App<T>()
 }
 
-export function createRouter (options?: IRouterOptions) {
-  return new Router(options)
+export function createRouter<T> (options?: IRouterOptions) {
+  return new Router<T>(options)
 }
 
 export function createCloudContext (): ICloudbaseContext {

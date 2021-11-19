@@ -27,9 +27,10 @@ export interface IConfig {
   debug?: boolean
 }
 
-export class Application extends Emitter {
+export class Application<ContextT = {}> extends Emitter {
+  // type ComposedContext = ContextT & IExtendableContext
   public context: IBaseContext
-  public middleware: Middleware<IExtendableContext>[]
+  public middleware: Middleware<ContextT & IExtendableContext>[]
   public config: IConfig
   constructor (config?: IConfig) {
     super()
@@ -38,7 +39,7 @@ export class Application extends Emitter {
     this.config = config ?? {}
   }
 
-  use (fn: Middleware<IExtendableContext>) {
+  use (fn: Middleware<ContextT & IExtendableContext>) {
     this.middleware.push(fn)
     return this
   }
@@ -49,7 +50,7 @@ export class Application extends Emitter {
   ): Promise<IResponseData> {
     const ctx = this.createContext(event, context)
     this.on('error', this.onerror)
-    const fn: ComposedMiddleware<IExtendableContext> = compose(this.middleware)
+    const fn: ComposedMiddleware<ContextT & IExtendableContext> = compose(this.middleware)
     return new Promise((resolve) => {
       fn(ctx)
         .then(() => {
@@ -62,7 +63,7 @@ export class Application extends Emitter {
     })
   }
 
-  respond (ctx: IExtendableContext): IResponseData {
+  respond (ctx: ContextT & IExtendableContext): IResponseData {
     return {
       status: ctx.status,
       data: ctx.body
@@ -84,10 +85,11 @@ export class Application extends Emitter {
   createContext (
     event: ICloudbaseEvent,
     context?: ICloudbaseContext
-  ): IExtendableContext {
+  ): ContextT & IExtendableContext {
     const ctx = Object.create(this.context)
     ctx.event = event
     ctx.context = context
+    ctx.data = event.data ?? {}
     ctx.url = event.$url
     ctx.status = 200
     ctx.body = {}

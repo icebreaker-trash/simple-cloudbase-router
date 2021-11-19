@@ -3,9 +3,9 @@ import compose from 'koa-compose'
 import type { IExtendableContext } from './context'
 import { pathToRegexp } from 'path-to-regexp'
 
-export interface ILayer {
+export interface ILayer<ContextT = {}> {
   path?: string
-  middleware: Middleware<IExtendableContext>
+  middleware: Middleware<ContextT & IExtendableContext>
   match(url: string): boolean
   regexp?: RegExp
 }
@@ -13,8 +13,8 @@ export interface ILayer {
 export interface IRouterOptions {
   prefix?: string
 }
-export class Router {
-  stack: ILayer[]
+export class Router<ContextT = {}> {
+  stack: ILayer<ContextT>[]
   options: IRouterOptions
   constructor (options?: IRouterOptions) {
     this.stack = []
@@ -26,8 +26,8 @@ export class Router {
   }
 
   use (
-    path: string | Middleware<IExtendableContext>,
-    fn?: Middleware<IExtendableContext>
+    path: string | Middleware<ContextT & IExtendableContext>,
+    fn?: Middleware<ContextT & IExtendableContext>
   ) {
     if (typeof path === 'string') {
       if (typeof fn === 'function') {
@@ -56,26 +56,27 @@ export class Router {
   }
 
   routes () {
-    const router: Router = this
+    const router = this
 
     const prefixReg = pathToRegexp(this.prefix, [], {
       end: false
     })
-    const dispatch: Middleware<IExtendableContext> & { router: Router } =
-      function (ctx, next) {
-        if (prefixReg.test(ctx.url)) {
-          const matchedLayers = router.match(ctx.url)
-          const layerChain = matchedLayers.reduce<
-            Middleware<IExtendableContext>[]
-          >((acc, cur) => {
-            acc.push(cur.middleware)
-            return acc
-          }, [])
+    const dispatch: Middleware<ContextT & IExtendableContext> & {
+      router: Router<ContextT>
+    } = function (ctx, next) {
+      if (prefixReg.test(ctx.url)) {
+        const matchedLayers = router.match(ctx.url)
+        const layerChain = matchedLayers.reduce<
+          Middleware<ContextT & IExtendableContext>[]
+        >((acc, cur) => {
+          acc.push(cur.middleware)
+          return acc
+        }, [])
 
-          return compose(layerChain)(ctx, next)
-        }
-        next()
+        return compose(layerChain)(ctx, next)
       }
+      next()
+    }
     dispatch.router = router
     return dispatch
   }

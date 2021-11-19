@@ -11,7 +11,8 @@ export interface IExtendableContext extends IBaseContext {
   body: Record<string, any>
   url: string
   status: number
-  [key: string]: unknown
+  data: Record<string, any>
+  // [key: string]: unknown
 }
 
 export const DEAULT_FAILED_CODE = 'FAIL_TO_INVOKE_FUNCTION'
