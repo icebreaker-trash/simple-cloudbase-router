@@ -14,6 +14,8 @@ npm i simple-cloudbase-router@latest
 
 ### Typescript/ESM (with [`simple-cloudbase`](https://cloudbase.icebreaker.top/))
 
+完整见[examples/modern](https://github.com/sonofmagic/simple-cloudbase-router/tree/main/examples/modern)
+
 ```ts
 // app.ts
 import { cloud } from '~/common/tcb'
@@ -47,35 +49,38 @@ export async function main(event: any, content: any) {
 
 ### Commonjs(Raw)
 
+完整见[examples/raw](https://github.com/sonofmagic/simple-cloudbase-router/tree/main/examples/raw)
+
 ```js
-// index.js
+// app.js
 const cloud = require('wx-server-sdk')
 cloud.init({
   env: cloud.DYNAMIC_CURRENT_ENV
 })
-const db = cloud.database()
-const { Application, Router } = require('simple-cloudbase-router')
+const { Application } = require('simple-cloudbase-router')
 const app = new Application()
-const router = new Router({
-  prefix: 'common'
-})
+const commonRouter = require('./routers/common')
+
 app.use((ctx, next) => {
   ctx.cloud = cloud
   ctx.wxContext = cloud.getWXContext()
   next()
 })
 
-router.use('getOpenId', (ctx, next) => {
-  const wxContext = ctx.wxContext
-  ctx.body = {
-    openid: wxContext.OPENID,
-    unionid: wxContext.UNIONID
-  }
-  next()
-})
-app.use(router.routes())
+app.use(commonRouter.routes())
 
-exports.main = async function main(event: any, content: any) {
-  return await app.serve(event, content)
+app.on('error', (_err, ctx) => {
+  console.error(ctx.event)
+})
+
+module.exports = app
+```
+
+```js
+// index.js
+const app = require('./app')
+
+exports.main = async (event, context) => {
+  return await app.serve(event, context)
 }
 ```
