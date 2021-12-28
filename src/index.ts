@@ -1,5 +1,5 @@
 import { pathToRegexp } from 'path-to-regexp'
-import type { Middleware } from 'koa-compose'
+import type { Middleware, ComposedMiddleware } from 'koa-compose'
 export { default as compose } from 'koa-compose'
 
 export interface IBaseContext {
@@ -24,7 +24,7 @@ export function createRoute (
   }
 }
 
-export function createServe (fn: Middleware<IBaseContext>) {
+export function createServe (fn: ComposedMiddleware<IBaseContext>) {
   return function serve (event: any, context: any) {
     const ctx:IBaseContext = {
       event,
