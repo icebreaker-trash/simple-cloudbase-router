@@ -3,24 +3,24 @@ import type { Middleware, ComposedMiddleware } from 'koa-compose'
 import type { IBaseContext } from './type'
 import { createContext } from './context'
 
-export function route (
+export function route<T={}> (
   path: string,
-  cb: Middleware<IBaseContext>
-): Middleware<IBaseContext> {
+  cb: Middleware<IBaseContext & T>
+): Middleware<IBaseContext & T> {
   const regexp = pathToRegexp(path)
   return async (ctx, next) => {
     if (regexp.test(ctx.event.$url)) {
-      await cb(ctx, next)
+      return await cb(ctx, next)
     } else {
-      await next()
+      return await next?.()
     }
   }
 }
 
-export function createServe (fn: ComposedMiddleware<IBaseContext>) {
+export function createServe<T={}> (fn: Middleware<IBaseContext & T>) {
   return function serve (event: any, context: any) {
-    const ctx = createContext(event, context)
-    return fn(ctx).then(() => {
+    const ctx = createContext<T>(event, context)
+    return (fn as ComposedMiddleware<IBaseContext & T>)(ctx).then(() => {
       return {
         status: ctx.status,
         data: ctx.body

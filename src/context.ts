@@ -1,11 +1,11 @@
 import type { IBaseContext } from './type'
 
-export function createContext (event:any, context:any) {
-  const ctx:IBaseContext = {
+export function createContext<T={}> (event:any, context:any):IBaseContext & T {
+  return {
     event,
     context,
+    data: event.data || {},
     body: {},
     status: 200
-  }
-  return ctx
+  } as IBaseContext & T
 }
