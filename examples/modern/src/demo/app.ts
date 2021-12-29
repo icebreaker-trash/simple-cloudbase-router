@@ -1,19 +1,18 @@
 import { cloud } from '~/common/tcb'
-import { Application } from 'simple-cloudbase-router'
+import { compose, createServe } from 'simple-cloudbase-router'
 import type { ICustomContext } from './type'
 import { commonRouter } from './routers'
-const app = new Application<ICustomContext>()
 
-app.use((ctx, next) => {
-  ctx.cloud = cloud
-  ctx.wxContext = cloud.getWXContext()
-  next()
-})
+const fn = compose<ICustomContext>([
+  async (ctx, next) => {
+    // @ts-ignore
+    ctx.cloud = cloud
+    // @ts-ignore
+    ctx.wxContext = cloud.getWXContext()
+    await next()
+  },
+  // @ts-ignore
+  commonRouter
+])
 
-app.use(commonRouter.routes())
-
-app.on('error', (_err, ctx) => {
-  console.error(ctx.event)
-})
-
-export default app
+export const serve = createServe(fn)

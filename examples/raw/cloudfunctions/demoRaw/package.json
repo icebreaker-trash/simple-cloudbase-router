@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "simple-cloudbase-router": "^0.0.4",
+    "simple-cloudbase-router": "^1.0.0-alpha.2",
     "wx-server-sdk": "^2.5.3"
   }
 }
