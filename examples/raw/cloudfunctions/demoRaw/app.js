@@ -2,20 +2,19 @@ const cloud = require('wx-server-sdk')
 cloud.init({
   env: cloud.DYNAMIC_CURRENT_ENV
 })
-const { Application } = require('simple-cloudbase-router')
-const app = new Application()
-const commonRouter = require('./routers/common')
+const { compose, createServe } = require('simple-cloudbase-router')
 
-app.use((ctx, next) => {
-  ctx.cloud = cloud
-  ctx.wxContext = cloud.getWXContext()
-  next()
-})
+const commonRoute = require('./routers/common')
 
-app.use(commonRouter.routes())
-
-app.on('error', (_err, ctx) => {
-  console.error(ctx.event)
-})
-
-module.exports = app
+const fn = compose([
+  async (ctx, next) => {
+    ctx.cloud = cloud
+    ctx.wxContext = cloud.getWXContext()
+    await next()
+  },
+  commonRoute
+])
+const serve = createServe(fn)
+module.exports = {
+  serve
+}

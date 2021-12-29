@@ -951,10 +951,10 @@ semver@^5.6.0:
   resolved "https://registry.nlark.com/semver/download/semver-5.7.1.tgz?cache=0&sync_timestamp=1624607961409&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fsemver%2Fdownload%2Fsemver-5.7.1.tgz#a954f931aeba508d307bbf069eff0c01c96116f7"
   integrity sha1-qVT5Ma66UI0we78Gnv8MAclhFvc=
 
-simple-cloudbase-router@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.npmmirror.com/simple-cloudbase-router/download/simple-cloudbase-router-0.0.4.tgz#7a6544dd2ffef77d000fc7efcb84e3bb95f466f4"
-  integrity sha512-hMuWeQvSt65gJzGfyqRjb2vhFxb73TjQh4gllrp1BqSZb3j7BkI3pOa2kQnjCl3pCUr61YT6r/SomEHuW+rjZw==
+simple-cloudbase-router@^1.0.0-alpha.2:
+  version "1.0.0-alpha.2"
+  resolved "https://registry.npmmirror.com/simple-cloudbase-router/download/simple-cloudbase-router-1.0.0-alpha.2.tgz#8ecf12b91112cad797551c0e08fcf31c7324a428"
+  integrity sha512-eeVgI6+FoyzNLPPrXEFJsSQImWWiCpQ8RyvY22wFDe4ejCy/QrbkrAzS49HLFpf0nSc5OtDywMqor63fWUWmQQ==
   dependencies:
     "@types/koa-compose" "^3.2.5"
 

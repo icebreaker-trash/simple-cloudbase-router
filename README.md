@@ -19,31 +19,27 @@ npm i simple-cloudbase-router@latest
 ```ts
 // app.ts
 import { cloud } from '~/common/tcb'
-import { Application } from 'simple-cloudbase-router'
+import { compose, createServe } from 'simple-cloudbase-router'
 import type { ICustomContext } from './type'
 import { commonRouter } from './routers'
-const app = new Application<ICustomContext>()
 
-app.use((ctx, next) => {
-  ctx.cloud = cloud
-  ctx.wxContext = cloud.getWXContext()
-  next()
-})
+const fn = compose<ICustomContext>([
+  async (ctx, next) => {
+    ctx.cloud = cloud
+    ctx.wxContext = cloud.getWXContext()
+    await next()
+  },
+  commonRouter
+])
 
-app.use(commonRouter.routes())
-
-app.on('error', (_err, ctx) => {
-  console.error(ctx.event)
-})
-
-export default app
+export const serve = createServe(fn)
 ```
 
 ```ts
 // index.ts
-import app from './app'
-export async function main(event: any, content: any) {
-  return await app.serve(event, content)
+import { serve } from './app'
+export async function main (event: any, content: any) {
+  return await serve(event, content)
 }
 ```
 
@@ -57,23 +53,22 @@ const cloud = require('wx-server-sdk')
 cloud.init({
   env: cloud.DYNAMIC_CURRENT_ENV
 })
-const { Application } = require('simple-cloudbase-router')
-const app = new Application()
-const commonRouter = require('./routers/common')
+const { compose, createServe } = require('simple-cloudbase-router')
 
-app.use((ctx, next) => {
-  ctx.cloud = cloud
-  ctx.wxContext = cloud.getWXContext()
-  next()
-})
+const commonRoute = require('./routers/common')
 
-app.use(commonRouter.routes())
-
-app.on('error', (_err, ctx) => {
-  console.error(ctx.event)
-})
-
-module.exports = app
+const fn = compose([
+  async (ctx, next) => {
+    ctx.cloud = cloud
+    ctx.wxContext = cloud.getWXContext()
+    await next()
+  },
+  commonRoute
+])
+const serve = createServe(fn)
+module.exports = {
+  serve
+}
 ```
 
 ```js

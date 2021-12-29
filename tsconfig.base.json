@@ -4,7 +4,6 @@
     "declaration": true,
     "declarationDir": "types",
     "declarationMap": false,
-    "rootDir": "src",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "lib": ["es6"],

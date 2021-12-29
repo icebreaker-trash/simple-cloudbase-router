@@ -13,7 +13,7 @@
     "delete:prod": "tcb fn delete --mode prod"
   },
   "dependencies": {
-    "simple-cloudbase-router": "^0.0.4",
+    "simple-cloudbase-router": "^1.0.0-alpha.2",
     "wx-server-sdk": "latest"
   },
   "devDependencies": {

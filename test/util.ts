@@ -1,22 +1,19 @@
-import { Router, App } from '../src'
-import type { ICloudbaseContext, ICloudbaseEvent, IRouterOptions } from '../src'
-
-export function createApp<T> () {
-  return new App<T>()
+export function wait (ms:number) {
+  return new Promise((resolve) => setTimeout(resolve, ms || 1))
 }
 
-export function createRouter<T> (options?: IRouterOptions) {
-  return new Router<T>(options)
+export function isPromise (x:any) {
+  return x && typeof x.then === 'function'
 }
 
-export function createCloudContext (): ICloudbaseContext {
+export function createCloudContext (): Record<string, any> {
   return {}
 }
 
 export function createCloudEvent (
   url?: string,
   data?: Record<string, any>
-): ICloudbaseEvent {
+): Record<string, any> {
   return {
     $url: url,
     data

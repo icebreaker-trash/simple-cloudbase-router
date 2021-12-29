@@ -1,30 +1,15 @@
-import { ScfError } from './error'
-import type { IScfErrorInfo } from './error'
-import type { ICloudbaseEvent, ICloudbaseContext } from './application'
-export interface IBaseContext {
-  throw(message: string, info?: IScfErrorInfo): never
+import type { IBaseContext, AnyObject } from './type'
+
+export function createContext<T = AnyObject> (
+  event: any,
+  context: any
+): IBaseContext & T {
+  return {
+    event,
+    context,
+    data: event.data || {},
+    params: {},
+    body: {},
+    status: 200
+  } as IBaseContext & T
 }
-
-export interface IExtendableContext extends IBaseContext {
-  event: ICloudbaseEvent
-  context: ICloudbaseContext
-  body: Record<string, any>
-  url: string
-  status: number
-  data: Record<string, any>
-  // [key: string]: unknown
-}
-
-export const DEAULT_FAILED_CODE = 'FAIL_TO_INVOKE_FUNCTION'
-
-const proto: IBaseContext = {
-  throw (message: string, info?: IScfErrorInfo) {
-    throw new ScfError(message, {
-      ...info,
-      code: info?.code || DEAULT_FAILED_CODE,
-      status: info?.status || 500
-    })
-  }
-}
-
-export default proto
