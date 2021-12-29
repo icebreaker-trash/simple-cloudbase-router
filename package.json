@@ -1,6 +1,6 @@
 {
   "name": "simple-cloudbase-router",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "repository": "git@github.com:sonofmagic/simple-cloudbase-router.git",
   "author": "SonOfMagic <qq1324318532@gmail.com>",
   "license": "MIT",
@@ -41,7 +41,8 @@
     "build": "yarn clean && rollup -c",
     "build:tsc": "tsc --build tsconfig.json",
     "test": "jest",
-    "clean": "node scripts/clean.js"
+    "clean": "node scripts/clean.js",
+    "prepublish": "yarn build"
   },
   "publishConfig": {
     "access": "public",

@@ -28,6 +28,7 @@ describe('Router core', () => {
         expect(ctx.params.action).toBe('del')
         ctx.body.d = true
       }),
+
       async (ctx, _next) => {
         ctx.body.end = true
       }
@@ -57,5 +58,28 @@ describe('Router core', () => {
     })
     result = await serve(event, defaultCloudContext)
     expect(result.data.d).toBe(true)
+  })
+
+  it('nest? route', async () => {
+    const fn = compose([
+      route('/common/getOpenId', (ctx, _next) => {
+        ctx.body.getOpenId = true
+      }),
+      route('/common/:action/:id', (ctx, _next) => {
+        const { action, id } = ctx.params
+        ctx.body.action = action
+        ctx.body.id = id
+      })
+    ])
+
+    const serve = createServe(fn)
+    let event = createCloudEvent('/common/del/110')
+    let result = await serve(event, defaultCloudContext)
+    expect(result.data.action).toBe('del')
+    expect(result.data.id).toBe('110')
+
+    event = createCloudEvent('/common/getOpenId')
+    result = await serve(event, defaultCloudContext)
+    expect(result.data.getOpenId).toBe(true)
   })
 })

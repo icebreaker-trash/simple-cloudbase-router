@@ -16,8 +16,7 @@ export function route<T = AnyObject> (
       if (keys.length) {
         const values = arr.slice(1)
         for (let i = 0; i < keys.length; i++) {
-          const key = keys[i]
-          ctx.params[key.name] = values[i]
+          ctx.params[keys[i].name] = values[i]
         }
       }
       return await cb(ctx, next)
